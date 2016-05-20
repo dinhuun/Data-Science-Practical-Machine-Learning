@@ -1,0 +1,21 @@
+## author: course
+library(quantmod)
+fromDate <- as.Date('01/01/08', format = '%m/%d/%y')
+toDate <- as.Date('12/31/13', format = '%m/%d/%y')
+getSymbols('GOOG', src = 'google', from = fromDate, to = toDate)
+
+monthG <- to.monthly(GOOG)
+openG <- Op(monthG)
+tsG <- ts(openG, frequency = 12)
+plot(tsG, xlab = 'years + 1', ylab = 'GOOG')
+readLines(prompt = 'Press [enter] to continue')
+plot(decompose(tsG), xlab = 'years + 1')
+readLines(prompt = 'Press [enter] to continue')
+
+trainG <- window(tsG, start = 1, end = 5)
+testG <- window(tsG, start = 5, end = 6.99)
+etsG <- ets(train, model = 'MMM')
+forecastG <- forecast(etsG)
+plot(forecastG)
+lines(testG, color = 'red')
+accuracy(forecastG, testG)
